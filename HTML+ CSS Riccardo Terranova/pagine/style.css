@@ -1,0 +1,33 @@
+h1{
+
+    color: rgb(0, 0, 0);
+    background-color: rgb(47, 179, 197);
+    border: solid 2px rgb(0, 0, 0);
+    text-align: center;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+
+
+body{
+    font-size: 13px;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+#btn1:hover{
+    background-color: rgb(53, 136, 212) !important;
+}
+
+#btn2:hover{
+    background-color: brown !important;
+}
+
+th, td{
+    border: solid rgb(80, 210, 210);
+}
+
+.animali{
+    font-size: larger;
+    font-weight: bolder;
+}
+
