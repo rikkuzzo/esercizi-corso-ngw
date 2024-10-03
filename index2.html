@@ -10,12 +10,15 @@
     </header>
     <script>
 
-    let numero = prompt("Inserisci un numero");
+ 
 
-    let i = 0;
-    while (i < numero) {
-        console.log("ciao");
-        i++;
+    while (true) {
+        messaggio = prompt("Inserisci il messaggio da stampare (scrivi 'esc' per uscire):");
+        if (messaggio === "esc") {
+        console.log("Programma terminato.");
+        break;
+  }
+
     }
 
 
