@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accesso</title>
+    </head>
+    <body>
+        <header>
+
+        </header>
+        <main>
+            <h1>Ti sei loggato</h1>
+            <h2>Benvenuto <span id="nome-utente"></span></h2>
+            <button onclick="logout_to_index()">Logout</button>
+        </main>
+
+        <script>
+            function logout_to_index() {
+                localStorage.removeItem("utente");
+                window.location.href = "index.html";
+            }
+            let utente = JSON.parse(localStorage.getItem("utente"));
+
+
+            document.getElementById("nome-utente").innerHTML = utente.username + " "  + utente.password;
+
+        </script>
+        <footer>
+            
+
+        </footer>
+    </body>
+</html>

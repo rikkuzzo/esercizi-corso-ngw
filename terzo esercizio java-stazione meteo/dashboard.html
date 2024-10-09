@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+
+<head>
+
+    <title>Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        input[type="text"] {
+            margin: 10px 0;
+            padding: 10px;
+            width: 80%;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px;
+            width: 84%;
+            border: none;
+            background-color: #007BFF;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header></header>
+    <main>
+        <h1>Login</h1>
+        <input type="text" id="campo-login" placeholder="Nome utente" />
+        <input type="text" id="password-login" placeholder="Password" />
+        <button onclick="accedi_dash()">Accedi</button>
+    </main>
+    <footer>
+        <script>
+            function accedi_dash() {
+                let input = document.getElementById("campo-login").value;
+                let input_pass = document.getElementById("password-login").value;
+                const utente = {
+                    username: input,
+                    password: input_pass,
+                };
+
+                if (input !== "") {
+                    localStorage.setItem("utente", JSON.stringify(utente));
+                    window.location.href = "index.html"; 
+                }
+            }
+        </script>
+    </footer>
+</body>
+</html>
