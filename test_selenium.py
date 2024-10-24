@@ -5,7 +5,9 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 
 # Configurazione logging 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -33,15 +35,37 @@ try:
     logging.info("Apertura della pagina principale di ARPA Lazio...")
     driver.get('https://www.arpalazio.it/')
 
+    # Chiudere o accettare l'avviso sui cookie se presente
+    try:
+        # Aspetta fino a 15 secondi per il popup dei cookie
+        cookie_alert = WebDriverWait(driver, 15).until(
+            EC.visibility_of_element_located((By.CSS_SELECTOR, '.cookiealert-container'))
+        )
+        accept_button = cookie_alert.find_element(By.XPATH, ".//a[contains(text(), 'Accetta') or contains(text(), 'Accetto')]")  # Modifica se il testo del pulsante è diverso
+        accept_button.click()
+        logging.info("Avviso sui cookie accettato.")
+    except TimeoutException:
+        logging.warning("Nessun avviso sui cookie trovato.")
+
     # Clicca il pulsante Servizi 
     logging.info("Cliccando sul pulsante 'Servizi'...")
-    services_button = driver.find_element(By.LINK_TEXT, 'Servizi')
-    services_button.click()
+    try:
+        services_button = WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located((By.LINK_TEXT, 'Servizi'))
+        )
+        services_button.click()
+    except TimeoutException:
+        logging.error("Timeout: Il pulsante 'Servizi' non è stato trovato o non è cliccabile.")
 
     # Clicca il tariffario
     logging.info("Cliccando sul link 'Tariffario'...")
-    tariffario_link = driver.find_element(By.LINK_TEXT, 'Tariffario')
-    tariffario_link.click()
+    try:
+        tariffario_link = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.LINK_TEXT, 'Tariffario'))
+        )
+        tariffario_link.click()
+    except TimeoutException:
+        logging.error("Timeout: Il link 'Tariffario' non è stato trovato o non è cliccabile.")
 
     # Crea una cartella
     download_folder = 'Documenti_Tariffario'
