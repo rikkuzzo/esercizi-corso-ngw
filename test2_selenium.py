@@ -1,3 +1,5 @@
+
+import telebot
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.service import Service
@@ -9,9 +11,13 @@ import time
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
+import threading
 
 logging.basicConfig(level=logging.INFO)
 
+
+bot_token = "7954433263:AAFjwI7-kNReRU-CvX5zu4xaOgzHky2ieok"
+bot = telebot.TeleBot(bot_token)
 
 options = Options()
 options.add_argument("--start-maximized") 
