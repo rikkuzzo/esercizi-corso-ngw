@@ -9,7 +9,7 @@ import logging
 import time
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.common.exceptions import NoSuchElementException, TimeoutException, WebDriverException
 
 # Configurazione del logging
 logging.basicConfig(level=logging.INFO)
@@ -58,7 +58,7 @@ def cerca_prodotti_su_amazon(prodotto_da_cercare):
         prodotti = []
         products = driver.find_elements(By.CSS_SELECTOR, ".s-main-slot .s-result-item")
 
-        for product in products[:5]:  # Limitiamo a 5 risultati
+        for product in products[:5]:  
             try:
                 title = product.find_element(By.CSS_SELECTOR, "h2 a span").text
                 price = product.find_element(By.CSS_SELECTOR, ".a-price-whole").text
@@ -68,28 +68,33 @@ def cerca_prodotti_su_amazon(prodotto_da_cercare):
 
         return prodotti
 
+    except WebDriverException as e:
+        logging.error(f"Si è verificato un errore con il driver di Selenium: {e}")
+        return []  
     finally:
         driver.quit()
 
-# Gestore del comando /start
+
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
     bot.reply_to(message, "Ciao! Inviami il nome di un prodotto da cercare su Amazon.")
 
-# Gestore dei messaggi (prodotti da cercare)
+
 @bot.message_handler(func=lambda message: True)
 def handle_message(message):
     prodotto_da_cercare = message.text
     bot.reply_to(message, f"Sto cercando {prodotto_da_cercare} su Amazon, attendi un attimo...")
 
-    # Effettua la ricerca su Amazon
-    risultati = cerca_prodotti_su_amazon(prodotto_da_cercare)
+    try:
+        risultati = cerca_prodotti_su_amazon(prodotto_da_cercare)
 
-    if risultati:
-        for prodotto in risultati:
-            bot.send_message(message.chat.id, prodotto)
-    else:
-        bot.send_message(message.chat.id, "Non ho trovato nessun prodotto con questo nome.")
+        if risultati:
+            for prodotto in risultati:
+                bot.send_message(message.chat.id, prodotto)
+        else:
+            bot.send_message(message.chat.id, "Non ho trovato nessun prodotto con questo nome.")
+    except Exception as e:
+        logging.error(f"Si è verificato un errore durante la ricerca: {e}")
+        bot.send_message(message.chat.id, "Si è verificato un errore durante la ricerca. Riprova più tardi.")
 
-# Avvia il bot
-bot.polling()
+bot.polling(none_stop=True)
